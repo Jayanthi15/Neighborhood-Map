@@ -1,68 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="author" content="Jayanthi">
-        <meta name="description" content="Neighborhood Map for Hot Restaurants in Chennai">
-        <title>Chennai's Hot Restaurants</title>
-        <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/styles.min.css" rel="stylesheet">
-        <script src="js/knockout-3.4.1.js"></script>
-        <script src="js/jquery-3.1.1.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/app.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdAhrrcPXp95c24n34CRrtNse4sDbL7Q0&callback=loadGoogleMap" async defer onerror="mapError()"></script>
-    </head> 
-    <body>
-        <div class="container">
-            <div class="row">
-                <nav class="navbar navbar-default navbar-fixed-top top-navigation">
-                    <div class="container-fluid">
-                        <!-- Brand and toggle get grouped for better mobile display -->
-                        <img class="logo-img" src="images/food-icon-3.png" alt="Logo">
-                        <div class="navbar-header top-nav-header-container">
-                            <button type="button" class="navbar-toggle collapsed top-nav-button" data-toggle="collapse" data-target="#top_navigation_collapse" aria-expanded="false">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar top-nav-icon"></span>
-                                <span class="icon-bar top-nav-icon"></span>
-                                <span class="icon-bar top-nav-icon"></span>
-                            </button>
-                            <a class="navbar-brand top-navigation-brand top-nav-header" href="#">Chennai's Hot Restaurants</a>
-                        </div>
-                        <div class="collapse navbar-collapse" id="top_navigation_collapse">
-                            <form class="navbar-form navbar-right top-nav-form">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search" data-bind="textInput: search_text">
-                                    <span class="input-group-btn">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Jayanthi">
+    <meta name="description" content="Neighborhood Map for Hot Restaurants in Chennai">
+    <title>Chennai's Hot Restaurants</title>
+    <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.min.css" rel="stylesheet">
+    <script src="js/knockout-3.4.1.js"></script>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdAhrrcPXp95c24n34CRrtNse4sDbL7Q0&callback=loadGoogleMap" async defer onerror="mapError()"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <nav class="navbar navbar-default navbar-fixed-top top-navigation">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <img class="logo-img" src="images/food-icon-3.png" alt="Logo">
+                    <div class="navbar-header top-nav-header-container">
+                        <button type="button" class="navbar-toggle collapsed top-nav-button" data-toggle="collapse" data-target="#top_navigation_collapse" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar top-nav-icon"></span>
+                            <span class="icon-bar top-nav-icon"></span>
+                            <span class="icon-bar top-nav-icon"></span>
+                        </button>
+                        <a class="navbar-brand top-navigation-brand top-nav-header" href="#">Chennai's Hot Restaurants</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="top_navigation_collapse">
+                        <form class="navbar-form navbar-right top-nav-form">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search" data-bind="textInput: search_text">
+                                <span class="input-group-btn">
                                         <button class="btn btn-default" type="button" data-bind="click:searchRestaurant"><i class="glyphicon glyphicon-filter"></i></button>
                                     </span>
-                                </div>
-                            </form>
-                            <ul class="nav navbar-nav top-nav-restaurant-ul hidden-sm hidden-md hidden-lg top-nav-collapse-list" data-bind="foreach: restaurantList">
-                                <li data-bind="customRestaurantName:name,click:$parent.selectRestaurant, css:{'active':active}"></li>
-                            </ul>
-                        </div>
+                            </div>
+                        </form>
+                        <ul class="nav navbar-nav top-nav-restaurant-ul hidden-sm hidden-md hidden-lg top-nav-collapse-list" data-bind="foreach: restaurantList">
+                            <li data-bind="customRestaurantName:name,click:$parent.selectRestaurant, css:{'active':active}"></li>
+                        </ul>
                     </div>
-                </nav>
-                <p class="restaurant-list-title hidden-xs">List</p>
-                <div class="side-nav-menu hidden-xs" data-bind="foreach: restaurantList">
-                    <a href="#" class="restaurant-item" data-bind="customRestaurantName:name,click:$parent.selectRestaurant, css:{'active':active}"></a>
                 </div>
-            </div>
-            <div id="google_maps"></div>
-            <div id="ajax_error" style="display: none">
-                <div class="alert alert-danger" role="alert">
-                    <strong>Error!</strong> <span data-bind="text:error_message">Something went wrong. Please try again.</span>
-                </div>
-            </div>
-            <div id="map_error" style="display: none">
-                <div class="alert alert-danger" role="alert">
-                    <strong>Error!</strong> Something went wrong. Please try again.
-                </div>
+            </nav>
+            <p class="restaurant-list-title hidden-xs">List</p>
+            <div class="side-nav-menu hidden-xs" data-bind="foreach: restaurantList">
+                <a href="#" class="restaurant-item" data-bind="customRestaurantName:name,click:$parent.selectRestaurant, css:{'active':active}"></a>
             </div>
         </div>
-    </body>
+        <div id="google_maps"></div>
+        <div id="ajax_error" style="display: none">
+            <div class="alert alert-danger" role="alert">
+                <strong>Error!</strong> <span data-bind="text:error_message">Something went wrong. Please try again.</span>
+            </div>
+        </div>
+        <div id="map_error" style="display: none">
+            <div class="alert alert-danger" role="alert">
+                <strong>Error!</strong> Something went wrong. Please try again.
+            </div>
+        </div>
+    </div>
+</body>
+
 </html>

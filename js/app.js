@@ -72,7 +72,7 @@ var restaurants = [{
         name: 'Eden',
         lattitude: '12.997711',
         longitude: '80.267610'
-        
+
     },
     {
         id: '65651',
@@ -116,10 +116,13 @@ var Restaurant = function(RestaurantData) {
 // Custom binding to prepend a glyphicon to each the restaurant name in UI.
 ko.bindingHandlers.customRestaurantName = {
     init: function(element, valueAccessor) {
-        var span = document.createElement('span'), targetText = valueAccessor();
+        var span = document.createElement('span'),
+            targetText = valueAccessor();
         span.classList.add('glyphicon', 'glyphicon-map-marker');
-        ko.applyBindingsToNode(element, { html: span.outerHTML+targetText() });       
-    }       
+        ko.applyBindingsToNode(element, {
+            html: span.outerHTML + targetText()
+        });
+    }
 };
 // Restaurant View Model which acts like a octopus/controller.
 // Restaurant View Model connects both the view and model.
@@ -137,7 +140,7 @@ var RestaurantViewModel = function() {
     // Google Map is initialized
     this.map = new google.maps.Map(document.getElementById('google_maps'), {
         center: {
-            lat: 13.0012, 
+            lat: 13.0012,
             lng: 80.2565
         },
         streetViewControl: false,
@@ -149,13 +152,13 @@ var RestaurantViewModel = function() {
     // This function will set th clicked item/restaurant as current restaurant and will call the getZomatoDetails function with the matching marker.
     this.selectRestaurant = function(restaurant) {
         $('#top_navigation_collapse').collapse('hide');
-        if(self.currentRestaurant()) {
+        if (self.currentRestaurant()) {
             self.currentRestaurant().active(false);
         }
         self.currentRestaurant = ko.observable(restaurant);
         self.currentRestaurant().active(true);
         var current_marker = ko.utils.arrayFirst(self.markers(), function(item) {
-            return item.id===self.currentRestaurant().id();
+            return item.id === self.currentRestaurant().id();
         });
         self.getZomatoDetails(self.currentRestaurant().id(), current_marker);
     };
@@ -195,53 +198,55 @@ var RestaurantViewModel = function() {
             $('#top_navigation_collapse').collapse('hide');
             var clicked_marker = this;
             var current_rest = ko.utils.arrayFirst(self.restaurantList(), function(item) {
-                return item.id()===clicked_marker.id;
+                return item.id() === clicked_marker.id;
             });
-            if(self.currentRestaurant()) {
+            if (self.currentRestaurant()) {
                 self.currentRestaurant().active(false);
             }
             self.currentRestaurant = ko.observable(current_rest);
             self.currentRestaurant().active(true);
             self.getZomatoDetails(self.currentRestaurant().id(), marker);
-            
-        },false);
+
+        }, false);
     };
     // getZomatoDetails function will fetch the details about a restuarant from a third-party service.
     // This function uses AJAX to fetch the details from the API and the fetched details are build up as HTML and populated on the infowindow.
-    self.getZomatoDetails = function(id,marker) {
+    self.getZomatoDetails = function(id, marker) {
         $.ajax({
             url: 'https://developers.zomato.com/api/v2.1/restaurant',
-            headers: {'user-key':zomato_API_key},
+            headers: {
+                'user-key': zomato_API_key
+            },
             data: {
-                'res_id':id
+                'res_id': id
             },
             success: function(result) {
-                var infoWindowMarkup = '<div id="content">'+
-                        '<div id="siteNotice">'+
-                        '</div>'+
-                        '<h2 id="infoTopHeading" class="infoHeading"><a target="_blank" href="'+result.url+'">'+result.name+'</a><span class="badge" style="background-color:#'+result.user_rating.rating_color+'">'+result.user_rating.aggregate_rating+'</span></h2>'+
-                        '<h4 id="infoSubHeading" class="infoCuisines">'+result.cuisines+'</h4>'+
-                        '<div class="infoBodyContantainer">'+
-                        '<div class="infoAddress">'+
-                        '<address><strong>Address</strong><br> '+result.location.address+'</address></br>'+
-                        '<strong>Average Cost for Two:</strong> '+result.currency+result.average_cost_for_two+'</br>'+
-                        '<strong>User Rating:</strong> '+result.user_rating.rating_text+'<br>'+
-                        '<strong>Has Online Delivery:</strong> '+(result.has_online_delivery?'Yes':'No')+'<br>'+
-                        '<strong>Is Delivering Now:</strong> '+(result.is_delivering_now?'Yes':'No')+'<br>'+
-                        '</div>'+
-                        '<div class="imageContainer"><img height="150" src="'+result.thumb+'" alt="'+result.name+'"></div></div>'+
-                        '<div id="infoFooterContainer">'+
-                        '<strong>Zomato Link:</strong> <a target="_blank" href="'+result.url+'">'+result.name+'</a>'+
-                        ' | <a target="_blank" href="'+result.photos_url+'">Photos</a>'+
-                        ' | <a target="_blank" href="'+result.menu_url+'">Menu</a>'+
-                        '</div>'+
-                        '</div>';
+                var infoWindowMarkup = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h2 id="infoTopHeading" class="infoHeading"><a target="_blank" href="' + result.url + '">' + result.name + '</a><span class="badge" style="background-color:#' + result.user_rating.rating_color + '">' + result.user_rating.aggregate_rating + '</span></h2>' +
+                    '<h4 id="infoSubHeading" class="infoCuisines">' + result.cuisines + '</h4>' +
+                    '<div class="infoBodyContantainer">' +
+                    '<div class="infoAddress">' +
+                    '<address><strong>Address</strong><br> ' + result.location.address + '</address></br>' +
+                    '<strong>Average Cost for Two:</strong> ' + result.currency + result.average_cost_for_two + '</br>' +
+                    '<strong>User Rating:</strong> ' + result.user_rating.rating_text + '<br>' +
+                    '<strong>Has Online Delivery:</strong> ' + (result.has_online_delivery ? 'Yes' : 'No') + '<br>' +
+                    '<strong>Is Delivering Now:</strong> ' + (result.is_delivering_now ? 'Yes' : 'No') + '<br>' +
+                    '</div>' +
+                    '<div class="imageContainer"><img height="150" src="' + result.thumb + '" alt="' + result.name + '"></div></div>' +
+                    '<div id="infoFooterContainer">' +
+                    '<strong>Zomato Link:</strong> <a target="_blank" href="' + result.url + '">' + result.name + '</a>' +
+                    ' | <a target="_blank" href="' + result.photos_url + '">Photos</a>' +
+                    ' | <a target="_blank" href="' + result.menu_url + '">Menu</a>' +
+                    '</div>' +
+                    '</div>';
                 self.infoWindow.setContent(infoWindowMarkup);
-                self.infoWindow.open(self.map,marker);
+                self.infoWindow.open(self.map, marker);
                 self.map.setCenter(marker.getPosition());
                 self.map.setZoom(16);
             },
-            error: function (jqXHR, exception) {
+            error: function(jqXHR, exception) {
                 // Error function is called when the AJAX function failed for any of the below mentioned reason and will be notified on the UI
                 var msg = '';
                 if (jqXHR.status === 0) {
@@ -263,20 +268,19 @@ var RestaurantViewModel = function() {
                 $('#ajax_error').show();
             }
         });
-        
+
     };
     // searchRestaurant function is used to search the queried input upon the available restaurant list and the restaurants matching the query will shown on the UI.
     // If the search query is empty the all the restaurants will be returned.
     this.searchRestaurant = function() {
         self.infoWindow.close();
-        if(self.search_text().length>0) {
+        if (self.search_text().length > 0) {
             var searchedList = ko.utils.arrayFilter(restaurants, function(item) {
-                                return item.name.toLowerCase().indexOf(self.search_text().toLowerCase()) !== -1;
-                            });
+                return item.name.toLowerCase().indexOf(self.search_text().toLowerCase()) !== -1;
+            });
             self.clearMarkers();
             self.setupRestaurants(searchedList);
-        }
-        else {
+        } else {
             self.setupRestaurants(restaurants);
         }
     };
@@ -289,7 +293,7 @@ var RestaurantViewModel = function() {
             self.restaurantList.push(new Restaurant(resItem));
             self.createMarker(resItem);
         });
-        if(self.restaurantList().length>0) {
+        if (self.restaurantList().length > 0) {
             self.getMapBounds();
         }
     };
