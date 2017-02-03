@@ -44,23 +44,23 @@
                             </div>
                         </form>
                         <ul class="nav navbar-nav top-nav-restaurant-ul hidden-sm hidden-md hidden-lg top-nav-collapse-list" data-bind="foreach: restaurantList">
-                            <li data-bind="customRestaurantName:name,click:$parent.selectRestaurant, css:{'active':active}"></li>
+                            <li data-bind="customRestaurantName:name,click:$parent.selectRestaurant, css:{'active':active}, visible:visible"></li>
                         </ul>
                     </div>
                 </div>
             </nav>
             <p class="restaurant-list-title hidden-xs">List</p>
             <div class="side-nav-menu hidden-xs" data-bind="foreach: restaurantList">
-                <a href="#" class="restaurant-item" data-bind="customRestaurantName:name,click:$parent.selectRestaurant, css:{'active':active}"></a>
+                <a href="#" class="restaurant-item" data-bind="customRestaurantName:name,click:$parent.selectRestaurant, css:{'active':active}, visible:visible"></a>
             </div>
         </div>
         <div id="google_maps"></div>
-        <div id="ajax_error" style="display: none">
+        <div id="ajax_error">
             <div class="alert alert-danger" role="alert">
                 <strong>Error!</strong> <span data-bind="text:error_message">Something went wrong. Please try again.</span>
             </div>
         </div>
-        <div id="map_error" style="display: none">
+        <div id="map_error">
             <div class="alert alert-danger" role="alert">
                 <strong>Error!</strong> Something went wrong. Please try again.
             </div>

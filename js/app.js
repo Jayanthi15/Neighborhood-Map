@@ -112,6 +112,7 @@ var Restaurant = function(RestaurantData) {
     this.lattitude = ko.observable(RestaurantData.lattitude);
     this.longitude = ko.observable(RestaurantData.longitude);
     this.active = ko.observable(false);
+    this.visible = ko.observable(true);
 };
 // Custom binding to prepend a glyphicon to each the restaurant name in UI.
 ko.bindingHandlers.customRestaurantName = {
@@ -160,6 +161,7 @@ var RestaurantViewModel = function() {
         var current_marker = ko.utils.arrayFirst(self.markers(), function(item) {
             return item.id === self.currentRestaurant().id();
         });
+        current_marker.setAnimation(google.maps.Animation.BOUNCE);
         self.getZomatoDetails(self.currentRestaurant().id(), current_marker);
     };
     // clearMarkers function is used to clear the marker on the map.
@@ -179,6 +181,7 @@ var RestaurantViewModel = function() {
         self.bounds = new google.maps.LatLngBounds();
         ko.utils.arrayForEach(self.markers(), function(marker) {
             self.bounds.extend(marker.getPosition());
+            marker.setAnimation(null);
         });
         self.map.fitBounds(self.bounds);
     };
@@ -195,6 +198,12 @@ var RestaurantViewModel = function() {
         self.markers.push(marker);
         // click event is bind to the marker which when click will call getZomatoDetails function.
         marker.addListener('click', function() {
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            } 
+            else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
             $('#top_navigation_collapse').collapse('hide');
             var clicked_marker = this;
             var current_rest = ko.utils.arrayFirst(self.restaurantList(), function(item) {
@@ -206,7 +215,6 @@ var RestaurantViewModel = function() {
             self.currentRestaurant = ko.observable(current_rest);
             self.currentRestaurant().active(true);
             self.getZomatoDetails(self.currentRestaurant().id(), marker);
-
         }, false);
     };
     // getZomatoDetails function will fetch the details about a restuarant from a third-party service.
@@ -275,13 +283,22 @@ var RestaurantViewModel = function() {
     this.searchRestaurant = function() {
         self.infoWindow.close();
         if (self.search_text().length > 0) {
-            var searchedList = ko.utils.arrayFilter(restaurants, function(item) {
-                return item.name.toLowerCase().indexOf(self.search_text().toLowerCase()) !== -1;
+            ko.utils.arrayForEach(restaurants, function(item, index) {
+                if(item.name.toLowerCase().indexOf(self.search_text().toLowerCase()) === -1){
+//                    console.log(self.restaurantList()[index]);
+                    self.restaurantList()[index].visible(false);
+                    self.markers()[index].setVisible(false);
+                }
+                else{
+                    self.restaurantList()[index].visible(true);
+                    self.markers()[index].setVisible(true);
+                }
             });
-            self.clearMarkers();
-            self.setupRestaurants(searchedList);
         } else {
-            self.setupRestaurants(restaurants);
+            ko.utils.arrayForEach(restaurants, function(item, index) {
+                    self.restaurantList()[index].visible(true);
+                    self.markers()[index].setVisible(true);
+            });
         }
     };
     // setupRestaurants function restaurants array as parameter.

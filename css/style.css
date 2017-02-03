@@ -131,6 +131,7 @@ body {
     bottom: 0;
     left: 25%;
     right: 25%;
+    display: none;
 }
 #map_error {
     position: absolute;
@@ -138,6 +139,7 @@ body {
     bottom: 0;
     left: 25%;
     right: 25%;
+    display: none;
 }
 #infoFooterContainer {
     margin-top: 5px
